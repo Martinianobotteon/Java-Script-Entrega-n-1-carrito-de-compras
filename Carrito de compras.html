@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfumería Árabe - Carrito de Compras</title>
+</head>
+<body>
+  <h1>Perfumería Árabe</h1>
+  <div id="productos"></div>
+
+  <h2>Carrito de Compras</h2>
+  <ul id="carrito"></ul>
+  <p>Total: $<span id="total">0</span></p>
+  <button onclick="mostrarFormulario()">Finalizar compra</button>
+
+  <div id="formulario" style="display:none;">
+    <h2>Formulario de Compra</h2>
+    <form id="formCompra">
+      <label>Nombre: <input type="text" id="nombre" required></label><br><br>
+      <label>Dirección: <input type="text" id="direccion" required></label><br><br>
+      <label>DNI: <input type="text" id="dni" required></label><br><br>
+      <label>Método de pago:
+        <select id="metodoPago" required>
+          <option value="">Seleccionar</option>
+          <option value="efectivo">Efectivo</option>
+          <option value="mercado_pago">Mercado Pago</option>
+          <option value="tarjeta">Tarjeta</option>
+        </select>
+      </label><br><br>
+      <button type="submit">Confirmar compra</button>
+    </form>
+  </div>
+
+  <script>
+    // Array de perfumes
+    const perfumes = [
+      { nombre: "Lattafa Khamrah Qahwa", precio: 75500 },
+      { nombre: "Armaf Club de Nuit Intense", precio: 82300 },
+      { nombre: "Al Haramain Gold Edition", precio: 99000 },
+      { nombre: "Lattafa Eclaire", precio: 67999 },
+      { nombre: "Armaf Odissey Mandarin Sky", precio: 69800 }
+    ];
+
+    // Carrito
+    const carrito = [];
+
+    // Mostrar los productos
+    const contenedor = document.getElementById("productos");
+
+    perfumes.forEach((perfume, index) => {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <p>${perfume.nombre} - $${perfume.precio}</p>
+        <button onclick="agregarAlCarrito(${index})">Agregar al carrito</button>
+        <hr>
+      `;
+      contenedor.appendChild(div);
+    });
+
+    // Función para agregar al carrito
+    function agregarAlCarrito(index) {
+      carrito.push(perfumes[index]);
+      mostrarCarrito();
+    }
+
+    // Mostrar el carrito
+    function mostrarCarrito() {
+      const listaCarrito = document.getElementById("carrito");
+      listaCarrito.innerHTML = "";
+      let total = 0;
+
+      carrito.forEach(perfume => {
+        const li = document.createElement("li");
+        li.textContent = `${perfume.nombre} - $${perfume.precio}`;
+        listaCarrito.appendChild(li);
+        total += perfume.precio;
+      });
+
+      document.getElementById("total").textContent = total;
+    }
+
+    // Mostrar formulario
+    function mostrarFormulario() {
+      if (carrito.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+      }
+      document.getElementById("formulario").style.display = "block";
+    }
+
+    // Enviar formulario
+    document.getElementById("formCompra").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const direccion = document.getElementById("direccion").value;
+      const dni = document.getElementById("dni").value;
+      const metodo = document.getElementById("metodoPago").value;
+
+      alert(`Gracias por tu compra, ${nombre}.\n\nMétodo de pago: ${metodo}.\nTotal: $${document.getElementById("total").textContent}`);
+      console.log("Cliente:", nombre, direccion, dni, metodo);
+      console.log("Carrito:", carrito);
+    });
+  </script>
+</body>
+</html>
